@@ -1,20 +1,21 @@
-const fs = require('fs');
-const path = require('path');
+const fs = require("fs");
+const path = require("path");
 
-const dbFolder = path.join(__dirname, 'db');
-const outputFile = path.join(__dirname, 'db.json');
+function merge() {
+  const dbFolder = path.join(__dirname, "db");
+  const outputFile = path.join(__dirname, "db.json");
 
-// Ambil semua file .json di folder db/
-const files = fs.readdirSync(dbFolder).filter(f => f.endsWith('.json'));
+  const files = fs.readdirSync(dbFolder).filter((f) => f.endsWith(".json"));
+  const combined = {};
 
-const combined = {};
+  files.forEach((file) => {
+    const key = path.basename(file, ".json");
+    const content = fs.readFileSync(path.join(dbFolder, file), "utf8");
+    combined[key] = JSON.parse(content);
+  });
 
-files.forEach(file => {
-  const key = path.basename(file, '.json'); // misal: mahasiswa.json → mahasiswa
-  const content = fs.readFileSync(path.join(dbFolder, file), 'utf-8');
-  combined[key] = JSON.parse(content);
-});
+  fs.writeFileSync(outputFile, JSON.stringify(combined, null, 2));
+  console.log("✅ Berhasil generate db.json dari folder /db");
+}
 
-fs.writeFileSync(outputFile, JSON.stringify(combined, null, 2));
-
-console.log('Berhasil generate db.json dari folder /db');
+module.exports = merge;
