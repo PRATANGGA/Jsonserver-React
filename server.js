@@ -1,13 +1,18 @@
-const merge = require("./merge-json.cjs"); // Sekarang ini adalah fungsi!
-const jsonServer = require("json-server");
-const path = require("path");
+const jsonServer = require('json-server');
+const path = require('path');
+const merge = require('./merge-json.cjs'); // pastikan ini function
 
-merge(); // ini tidak error lagi
+merge(); // generate db.json
 
 const server = jsonServer.create();
 server.use(jsonServer.defaults());
-const router = jsonServer.router(path.join(__dirname, "db.json"));
+
+const router = jsonServer.router(path.join(__dirname, 'db.json'));
 server.use(router);
 
-const PORT = process.env.PORT || 3001;
-server.listen(PORT, () => console.log(`JSON Server di port ${PORT}`));
+// Gunakan PORT dari Railway (default 3000 jika tidak ada)
+const PORT = process.env.PORT || 3000;
+server.listen(PORT, () => {
+  console.log(`✅ JSON Server running on port ${PORT}`);
+});
+
